@@ -4,24 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#c5e87f"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:id="@+id/texto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Hello World!"/>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="251dp"
+        android:layout_height="245dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="116dp"
+        app:srcCompat="@drawable/_marketplace" />
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-20dp"
+        android:text="Bem-vindo ao Doe&Descarte!"
+        android:textStyle="bold"
+        tools:textColor="#006400"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+    <Button
+        android:id="@+id/ENTRAR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/texto"
-        android:layout_marginTop="50dp"
-        android:text="Sou Lauro sadboy" />
-
+        android:layout_marginBottom="105dp"
+        android:background="#68a258"
+        android:enabled="true"
+        android:text="ENTRAR" />
 </RelativeLayout>
