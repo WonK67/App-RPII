@@ -30,7 +30,7 @@
         android:textStyle="bold"
         tools:textColor="#006400" />
 
-    <Button
+    <Button style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:id="@+id/ENTRAR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,5 +39,7 @@
         android:layout_marginBottom="105dp"
         android:background="#68a258"
         android:enabled="true"
-        android:text="ENTRAR" />
+        android:text="ENTRAR"
+        android:onClick="openMainMenu"
+        />
 </RelativeLayout>
