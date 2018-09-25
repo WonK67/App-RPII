@@ -25,21 +25,18 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="57dp"
-        android:text="Bem-vindo ao Doe&Descarte!"
+        android:text="Bem-vindo ao DoeDescarte!"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textStyle="bold"
         tools:textColor="#006400" />
 
-    <Button style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:id="@+id/ENTRAR"
+    <Button
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="105dp"
-        android:background="#68a258"
-        android:enabled="true"
-        android:text="ENTRAR"
-        android:onClick="openMainMenu"
-        />
+        android:text="Button" />
+
 </RelativeLayout>
