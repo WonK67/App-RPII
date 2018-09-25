@@ -16,19 +16,19 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="116dp"
-        app:srcCompat="@drawable/_marketplace" />
+        app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/imageView2"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-20dp"
+        android:layout_marginTop="57dp"
         android:text="Bem-vindo ao Doe&Descarte!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textStyle="bold"
-        tools:textColor="#006400"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+        tools:textColor="#006400" />
 
     <Button
         android:id="@+id/ENTRAR"
