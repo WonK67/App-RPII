@@ -2,4 +2,8 @@
     <string name="app_name">App</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_indicate">Indique um local</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_infograph">Painel informativo</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_maps">Mapeamento de locais</string>
 </resources>
