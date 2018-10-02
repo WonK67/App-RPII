@@ -10,7 +10,7 @@
     tools:showIn="@layout/activity_indicate">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editTextName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -18,36 +18,36 @@
         android:layout_marginTop="165dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="nome" />
+        android:text="Nome" />
 
     <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="229dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="e-mail:" />
-
-    <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editTextMessage"
         android:layout_width="wrap_content"
         android:layout_height="77dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/editTextEmail"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="199dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="textMultiLine"
         android:text="Mensagem:" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="90dp"
-        android:text="Button" />
+        android:text="Enviar" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:text="E-mail"
+        android:inputType="textEmailAddress" />
 </RelativeLayout>
