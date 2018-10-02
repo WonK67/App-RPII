@@ -50,7 +50,7 @@
         </activity>
         <activity
             android:name=".SearchActivity"
-            android:label="@string/title_activity_search"
+            android:label="Busca de Locais"
             android:parentActivityName=".MenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
