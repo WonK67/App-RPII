@@ -4,16 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MenuActivity"
     tools:showIn="@layout/activity_menu">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="125dp"
-        android:layout_height="86dp"
+        android:layout_width="match_parent"
+        android:layout_height="174dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="158dp"
-        app:srcCompat="@drawable/map" />
+        android:layout_marginTop="32dp"
+        android:background="#89dbc5"
+        app:srcCompat="@drawable/logo_app" />
+
+    <ImageView
+        android:id="@+id/search_icon"
+        android:layout_width="140dp"
+        android:layout_height="86dp"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/map"
+        android:onClick="openSearchActivity"/>
+
+    <ImageView
+        android:id="@+id/infograph_icon"
+        android:layout_width="98dp"
+        android:layout_height="98dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="96dp"
+        android:layout_toStartOf="@+id/search_icon"
+        android:onClick="openInfographActivity"
+        app:srcCompat="@drawable/smartphone" />
+
+    <ImageView
+        android:layout_width="102dp"
+        android:layout_height="95dp"
+        android:layout_alignTop="@+id/infograph_icon"
+        android:layout_toEndOf="@+id/search_icon"
+        app:srcCompat="@drawable/checked"
+        android:id="@+id/logo_app"
+        android:onClick="openIndicateActivity"/>
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#89dbc5"
+        />
 </RelativeLayout>
