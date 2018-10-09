@@ -8,13 +8,23 @@
     tools:showIn="@layout/activity_search">
 
 
+    <TextView
+        android:id="@+id/textViewFinalidade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Finalidade"
+        android:textSize="19sp"
+        android:layout_marginTop="10dp"
+        />
+
     <RadioGroup
         android:id="@+id/radioGroupDescDoacao"
         android:layout_width="343dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
+        android:layout_below="@id/textViewFinalidade"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <RadioButton
@@ -41,75 +51,98 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Tipo de Material"
-        android:textSize="20sp"
+        android:textSize="19sp"
         android:layout_below="@id/radioGroupDescDoacao"
         android:layout_marginTop="10dp"
         />
 
+    <Spinner
+        android:id="@+id/spinnerMateriais"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_below="@id/textViewTipoMaterial"
+        android:layout_marginTop="20dp"/>
 
-        <RadioGroup
-            android:id="@+id/radioGroupMaterial1"
-            android:layout_width="343dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            android:layout_below="@id/textViewTipoMaterial"
-            android:layout_marginTop="10dp">
-
-            <RadioButton
-                android:id="@+id/radioButtonMadeira"
-                android:layout_width="106dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Madeira" />
-
-            <RadioButton
-                android:id="@+id/radioButtonEntulho"
-                android:layout_width="113dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Entulho" />
-
-            <RadioButton
-                android:id="@+id/radioButtonMoveis"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Móveis" />
-
-            </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/radioGroupMaterial2"
-        android:layout_width="343dp"
+    <TextView
+        android:id="@+id/textViewLocalização"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:layout_below="@id/radioGroupMaterial1"
-        android:layout_marginTop="5dp">
+        android:layout_centerVertical="true"
+        android:textSize="19sp"
+        android:text="Localização"
+        android:layout_below="@id/spinnerMateriais"
+        android:layout_marginTop="10dp"
+        />
 
-        <RadioButton
-            android:id="@+id/radioButtonPilhas"
-            android:layout_width="106dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Pilhas" />
-
-        <RadioButton
-            android:id="@+id/radioButtonRecicláveis"
-            android:layout_width="113dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Recicláveis" />
-
-        <RadioButton
-            android:id="@+id/radioButtonBaterias"
-            android:layout_width="95dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Baterias" />
+    <CheckBox
+        android:id="@+id/checkBoxLocalizaçãoAtual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/radioGroupDescDoacao"
+        android:layout_below="@id/textViewLocalização"
+        android:layout_marginTop="12dp"
+        android:text="Usar minha localização atual" />
 
 
-    </RadioGroup>
+    <TextView
+        android:id="@+id/textViewOu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="15sp"
+        android:text="OU"
+        android:layout_below="@id/checkBoxLocalizaçãoAtual"
+        android:layout_marginTop="5dp"
+        />
+
+    <EditText
+        android:id="@+id/editTextEndereco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/radioGroupDescDoacao"
+        android:layout_below="@id/textViewOu"
+        android:layout_marginTop="10dp"
+        android:ems="13"
+        android:textSize="17sp"
+        android:inputType="textPersonName"
+        android:text="Endereço" />
+
+    <TextView
+        android:id="@+id/textViewRaioDistancia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="15sp"
+        android:text="Raio de Distância"
+        android:textColor="#000000"
+        android:layout_alignStart="@id/editTextEndereco"
+        android:layout_below="@id/editTextEndereco"
+        android:layout_marginTop="15dp"
+        />
+
+    <SeekBar
+        android:id="@+id/seekBarRaioDistancia"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="346dp"
+        android:layout_height="39dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/textViewRaioDistancia"
+        android:layout_below="@id/textViewRaioDistancia"
+        android:layout_marginBottom="107dp"
+        android:max="10"
+        android:progress="5" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:text="Buscar!" />
+
 
 </RelativeLayout>
