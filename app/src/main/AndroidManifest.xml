@@ -28,8 +28,12 @@
         </activity>
         <activity
             android:name=".IndicateActivity"
-            android:label="@string/title_activity_indicate"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="Indique um local"
+            android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="br.com.dificuldadezero.app.MenuActivity" />
+        </activity>
         <activity
             android:name=".MenuActivity"
             android:label="@string/title_activity_menu"
