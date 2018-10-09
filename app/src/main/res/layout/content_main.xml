@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_main">
 
     <ImageView
-        android:id="@+id/imageLogo"
+        android:id="@+id/imageEcobusca"
         android:layout_width="254dp"
         android:layout_height="75dp"
         android:layout_alignParentTop="true"
@@ -18,22 +18,23 @@
         app:srcCompat="@drawable/ecobusca1" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageLogo"
         android:layout_width="251dp"
         android:layout_height="245dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/imageLogo"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/imageEcobusca"
+        android:layout_marginTop="50dp"
         app:srcCompat="@drawable/logo_app" />
 
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="108dp"
+        android:layout_height="57dp"
+        android:layout_below="@id/imageLogo"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="105dp"
-        android:text="Entrar" />
+        android:layout_marginTop="40dp"
+        android:text="Entrar"
+        android:onClick="openMainMenu"/>
 
 </RelativeLayout>
