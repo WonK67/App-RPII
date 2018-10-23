@@ -6,11 +6,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.PlaceDetectionClient;
+//import com.google.android.gms.location.places.GeoDataClient;
+//import com.google.android.gms.location.places.Places;
+//import com.google.android.gms.location.places.PlaceDetectionClient;
 
 public class MapsActivity extends SupportMapFragment implements OnMapReadyCallback {
 
@@ -37,8 +38,18 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng saoPaulo = new LatLng(-23.54, 46.63);
+        mMap.addMarker(new MarkerOptions()
+                .position(saoPaulo)
+                .title("Marker in Sao Paulo")
+                .snippet("Olaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(saoPaulo)
+                .zoom(12)
+                .bearing(0)
+                .tilt(0)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
     }
 }
