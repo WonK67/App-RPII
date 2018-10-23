@@ -1,5 +1,6 @@
 package br.com.dificuldadezero.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,11 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void openMapActivity(View view) {
+        Intent intent = new Intent(this, MapsBaseActivity.class);
+        startActivity(intent);
     }
 
 }

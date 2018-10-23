@@ -30,4 +30,6 @@ public class MenuActivity extends AppCompatActivity {
         Intent intent = new Intent(this, IndicateActivity.class);
         startActivity(intent);
     }
+
+
 }

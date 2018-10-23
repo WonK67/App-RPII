@@ -6,4 +6,5 @@
     <string name="title_activity_infograph">Painel informativo</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_maps">Mapeamento de locais</string>
+    <string name="title_activity_maps_base">MapsBaseActivity</string>
 </resources>
