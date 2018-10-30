@@ -1,7 +1,17 @@
 package br.com.dificuldadezero.app;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -9,18 +19,31 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-//import com.google.android.gms.location.places.GeoDataClient;
-//import com.google.android.gms.location.places.Places;
-//import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends SupportMapFragment implements OnMapReadyCallback {
+import static android.support.constraint.Constraints.TAG;
+
+public class MapsActivity extends SupportMapFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
+    private GoogleApiClient mClient;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getMapAsync(this);
+        mClient = new GoogleApiClient
+                .Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
     }
 
 
@@ -35,21 +58,51 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        GeoDataClient myGeo = Places.getGeoDataClient(getContext());
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng saoPaulo = new LatLng(-23.54, 46.63);
-        mMap.addMarker(new MarkerOptions()
-                .position(saoPaulo)
-                .title("Marker in Sao Paulo")
-                .snippet("Olaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(saoPaulo)
-                .zoom(12)
-                .bearing(0)
-                .tilt(0)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        myGeo.getPlaceById("ChIJV_YJS0JazpQRjDLbjJOp47c").addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                if (task.isSuccessful()) {
+                    PlaceBufferResponse places = task.getResult();
+                    Place myPlace = places.get(0);
+                    Log.i(TAG, "Place found: " + myPlace.getName());
+                    LatLng place = myPlace.getLatLng();
+                    mMap.addMarker(new MarkerOptions()
+                            .position(place)
+                            .title(String.valueOf(myPlace.getName()))
+                            .snippet(String.valueOf(myPlace.getRating())));
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(place)
+                            .zoom(12)
+                            .bearing(0)
+                            .tilt(0)
+                            .build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    places.release();
+                } else {
+                    Log.e(TAG, "Place not found.");
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }

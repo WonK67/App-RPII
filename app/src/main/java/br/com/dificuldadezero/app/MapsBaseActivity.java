@@ -10,6 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
+
 public class MapsBaseActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
@@ -28,5 +32,8 @@ public class MapsBaseActivity extends AppCompatActivity {
         transaction.commitAllowingStateLoss();
 
     }
+
+
+
 
 }
