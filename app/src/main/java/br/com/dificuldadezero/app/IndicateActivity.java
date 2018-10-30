@@ -13,7 +13,7 @@ import android.widget.EditText;
 public class IndicateActivity extends AppCompatActivity {
 
     EditText nome;
-    EditText email;
+    EditText local;
     EditText message;
 
     @Override
@@ -23,16 +23,16 @@ public class IndicateActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         nome = findViewById(R.id.editTextName);
-        email = findViewById(R.id.editTextEmail);
+        local = findViewById(R.id.editTextPlaceName);
         message = findViewById(R.id.editTextMessage);
 
     }
 
     public void sendMail (View view){
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","abc@gmail.com", null));
+                "mailto","ecobusca.app@gmail.com", null));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[Indicação de novo local] " + nome.getText().toString());
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "email: " + email.getText().toString() + "\n" + message.getText().toString());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "local: " + local.getText().toString() + "\n" + message.getText().toString());
         startActivity(Intent.createChooser(emailIntent, "Send email"));
     }
 
