@@ -20,13 +20,26 @@
         android:inputType="textPersonName"
         android:hint="Nome" />
 
+
+    <EditText
+        android:id="@+id/editTextPlaceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Nome do local" />
+
+
     <EditText
         android:id="@+id/editTextMessage"
         android:layout_width="wrap_content"
         android:layout_height="77dp"
-        android:layout_below="@id/editTextEmail"
+        android:layout_below="@id/editTextPlaceName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:inputType="textMultiLine"
         android:hint="Mensagem:" />
@@ -42,18 +55,5 @@
         android:onClick="sendMail"
         />
 
-
-
-
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="E-mail"
-        android:inputType="textEmailAddress"/>
 
 </RelativeLayout>
