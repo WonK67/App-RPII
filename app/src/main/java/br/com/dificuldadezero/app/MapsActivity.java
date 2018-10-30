@@ -25,6 +25,8 @@ import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+
 import static android.support.constraint.Constraints.TAG;
 
 public class MapsActivity extends SupportMapFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -32,6 +34,7 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
 
     private GoogleMap mMap;
     private GoogleApiClient mClient;
+    GeoDataClient myGeo;
 
 
     @Override
@@ -44,6 +47,7 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
                 .build();
+        myGeo = Places.getGeoDataClient(getContext());
     }
 
 
@@ -58,38 +62,52 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-        GeoDataClient myGeo = Places.getGeoDataClient(getContext());
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        myGeo.getPlaceById("ChIJV_YJS0JazpQRjDLbjJOp47c").addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-                if (task.isSuccessful()) {
-                    PlaceBufferResponse places = task.getResult();
-                    Place myPlace = places.get(0);
-                    Log.i(TAG, "Place found: " + myPlace.getName());
-                    LatLng place = myPlace.getLatLng();
-                    mMap.addMarker(new MarkerOptions()
-                            .position(place)
-                            .title(String.valueOf(myPlace.getName()))
-                            .snippet(String.valueOf(myPlace.getRating())));
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(place)
-                            .zoom(12)
-                            .bearing(0)
-                            .tilt(0)
-                            .build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                    places.release();
-                } else {
-                    Log.e(TAG, "Place not found.");
+        /*mMap = googleMap;
+        //if(doacao)
+        //Ponto[] pontos = readCSV(doacao)
+        pontos = filterByMaterial(pontos)
+        for(int i = 0; i < pontos.length; i++) {
+            myGeo.getPlaceById("ChIJV_YJS0JazpQRjDLbjJOp47c").addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                    if (task.isSuccessful()) {
+                        PlaceBufferResponse places = task.getResult();
+                        Place myPlace = places.get(0);
+                        Log.i(TAG, "Place found: " + myPlace.getName());
+                        LatLng place = myPlace.getLatLng();
+                        mMap.addMarker(new MarkerOptions()
+                                .position(place)
+                                .title(String.valueOf(myPlace.getName()))
+                                .snippet(String.valueOf(myPlace.getRating())));
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(place)
+                                .zoom(12)
+                                .bearing(0)
+                                .tilt(0)
+                                .build();
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        places.release();
+                    } else {
+                        Log.e(TAG, "Place not found.");
+                    }
                 }
-            }
-        });
+            });
+        }*/
 
     }
+
+    /*public List<Ponto> filterByMaterial(List<Ponto> pontos, String material){
+        List<Ponto> filteredPoints = new ArrayList<>()
+        for(int = 0; i < pontos.length; i++){
+            Ponto currentPoint = pontos.get(i);
+            String[] materialsOfThisLocal = currentPoint.getMaterial().split(",");
+            boolean placeHasMaterial = false;
+            for(int j = 0; j < materialsOfThisLocal.length; j++){
+                if(materialsOfThisLocal[j].equals(material)) placeHasMaterial = true;
+            }
+            if(placeHasMaterial) filteredPoints.add(currentPoint);
+        }
+    }*/
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
