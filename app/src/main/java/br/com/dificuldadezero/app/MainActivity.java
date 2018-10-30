@@ -1,6 +1,8 @@
 package br.com.dificuldadezero.app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,14 +16,37 @@ import android.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     private GoogleApiClient mClient;
+
+
+    private List<Ponto> pontos_oleo_cozinha = readCSV("ecopontos");  // lista com os pontos do arquivo csv que o aplicativo mostrará no mapa
+
+    public MainActivity() throws IOException {
+
+
+    }
+    /*private List<Ponto> pontos_pilhas = readCSV();
+    private List<Ponto> ecopontos = readCSV();
+    private List<Ponto> lixo_eletronico = readCSV();
+    private List<Ponto> pev = readCSV();*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
     }
 
     @Override
@@ -67,4 +92,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.i("connection","API Client Connection failed!");
     }
+
+
+    public List<Ponto> readCSV(String arq) throws IOException {
+
+        List<Ponto> pontos = new ArrayList<>();
+        Context context = getApplicationContext();
+
+        Resources res = context.getResources();
+        InputStream is = getResources().openRawResource(res.getIdentifier(arq,"raw", context.getPackageName()));
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("ASCII")));
+
+        String line = "";
+
+        reader.readLine();  // pula o header
+
+        while((line = reader.readLine()) != null){
+
+            String[] splittedLine = line.split(",");
+
+            for (String s: )
+
+            Ponto novoPonto = new Ponto(Double.parseDouble(splittedLine[0]),Double.parseDouble(splittedLine[1]), splittedLine[2], splittedLine[3], splittedLine[4]);
+
+            pontos.add(novoPonto);
+        }
+
+        return pontos;
+    }
+
 }
