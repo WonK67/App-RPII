@@ -16,6 +16,9 @@ public class SearchActivity extends AppCompatActivity {
     private Spinner spinner;
     private RadioButton radioButtonDoacao;
     private RadioButton radioButtonDescarte;
+    private String[] donationMaterials;
+    private String[] thrashMaterials;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class SearchActivity extends AppCompatActivity {
                 "eletrodomésticos",
                 "livros"
         };
+        this.donationMaterials = donationMaterials;
 
         String[] thrashMaterials = {
                 "Entulho",
@@ -48,7 +52,15 @@ public class SearchActivity extends AppCompatActivity {
                 "Pilhas",
                 "Lixo eletrônico (exceto pilhas e baterias)"
         };
+        this.thrashMaterials = thrashMaterials;
+    }
 
+    public void openMapActivity(View view) {
+        Intent intent = new Intent(this, MapsBaseActivity.class);
+        startActivity(intent);
+    }
+
+    public void selectDonationOrThrash(View view) {
         ArrayAdapter<String> spinnerArrayAdapter;
 
         if(radioButtonDoacao.isChecked()){
@@ -65,10 +77,4 @@ public class SearchActivity extends AppCompatActivity {
                 .simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
     }
-
-    public void openMapActivity(View view) {
-        Intent intent = new Intent(this, MapsBaseActivity.class);
-        startActivity(intent);
-    }
-
 }

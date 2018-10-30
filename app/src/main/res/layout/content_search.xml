@@ -25,7 +25,8 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/textViewFinalidade"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <RadioButton
             android:id="@+id/radioButtonDescarte"
@@ -33,14 +34,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
 
-            android:text="Descarte" />
+            android:text="Descarte"
+            android:onClick="selectDonationOrThrash"/>
 
         <RadioButton
             android:id="@+id/radioButtonDoacao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Doação" />
+            android:text="Doação"
+            android:onClick="selectDonationOrThrash"/>
 
 
     </RadioGroup>
