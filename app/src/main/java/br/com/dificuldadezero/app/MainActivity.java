@@ -112,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             String[] splittedLine = line.split(",");
 
-            for (String s: )
 
             Ponto novoPonto = new Ponto(Double.parseDouble(splittedLine[0]),Double.parseDouble(splittedLine[1]), splittedLine[2], splittedLine[3], splittedLine[4]);
 
