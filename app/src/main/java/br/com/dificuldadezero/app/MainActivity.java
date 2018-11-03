@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private GoogleApiClient mClient;
 
 
-    private List<Ponto> pontos_oleo_cozinha = readCSV("ecopontos");  // lista com os pontos do arquivo csv que o aplicativo mostrará no mapa
+    private List<Ponto> pontos_oleo_cozinha = readCSV("locais_doacao_example");  // lista com os pontos do arquivo csv que o aplicativo mostrará no mapa
 
     public MainActivity() throws IOException {
 

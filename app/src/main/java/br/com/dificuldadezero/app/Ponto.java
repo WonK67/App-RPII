@@ -18,7 +18,7 @@ class Ponto {
 
 
 
-    Ponto(double lat, double longi, String id, String material, String name){ // name nao ira ser usado
+    Ponto(double lat, double longi, String name, String id, String material){ // name nao ira ser usado
 
         this.lat = lat;
         this.longi = longi;
