@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private GoogleApiClient mClient;
 
 
-    private List<Ponto> pontos_oleo_cozinha = readCSV("locais_doacao_example");  // lista com os pontos do arquivo csv que o aplicativo mostrará no mapa
+    private List<Ponto> pontos_oleo_cozinha;
 
     public MainActivity() throws IOException {
 
@@ -44,7 +44,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        try {
+            pontos_oleo_cozinha = readCSV("locais_doacao_example");  // lista com os pontos do arquivo csv que o aplicativo mostrará no mapa
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }

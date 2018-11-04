@@ -1,11 +1,18 @@
 package br.com.dificuldadezero.app;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -18,14 +25,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PipedOutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -34,6 +47,13 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
 
     private GoogleMap mMap;
     private GoogleApiClient mClient;
+    private Context context;
+    private Boolean donation;
+    private String material;
+    private String csvFile;
+    private double gpsLatitude;
+    private double gpsLongitude;
+    private int maxDistance;
     GeoDataClient myGeo;
 
 
@@ -41,6 +61,20 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getMapAsync(this);
+        context = getContext();
+        Bundle arguments = getArguments();
+        donation = arguments.getBoolean("donation");
+        material = arguments.getString("material").toLowerCase();
+        gpsLatitude = arguments.getDouble("gpsLatitude");
+        gpsLongitude = arguments.getDouble("gpsLongitude");
+        maxDistance = arguments.getInt("maxDistance");
+        if(donation) csvFile = "donation";
+        else csvFile = "discard";
+        Log.e(TAG, "CSV file: " + csvFile);
+        Log.e(TAG, "Donation: " + donation);
+        Log.e(TAG, "Material: " + material);
+        Log.i(TAG, "gpsLatitude: " + gpsLatitude);
+        Log.i(TAG, "gpsLongitude: " + gpsLongitude);
         mClient = new GoogleApiClient
                 .Builder(getContext())
                 .addApi(Places.GEO_DATA_API)
@@ -62,12 +96,39 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        /*mMap = googleMap;
-        //if(doacao)
-        //Ponto[] pontos = readCSV(doacao)
-        pontos = filterByMaterial(pontos)
-        for(int i = 0; i < pontos.length; i++) {
-            myGeo.getPlaceById("ChIJV_YJS0JazpQRjDLbjJOp47c").addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+        mMap = googleMap;
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                LinearLayout info = new LinearLayout(context);
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(context);
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(context);
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
+        List<Ponto> pontos = findPoints();
+        for(int i = 0; i < pontos.size(); i++) {
+            myGeo.getPlaceById(pontos.get(i).getId()).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
                 @Override
                 public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
                     if (task.isSuccessful()) {
@@ -75,10 +136,18 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
                         Place myPlace = places.get(0);
                         Log.i(TAG, "Place found: " + myPlace.getName());
                         LatLng place = myPlace.getLatLng();
+                        String address = String.valueOf(myPlace.getAddress());
+                        String phone = String.valueOf(myPlace.getPhoneNumber());
+                        String rating = String.valueOf(myPlace.getRating());
+                        if(rating.equals("-1.0")) rating = "indisponível";
                         mMap.addMarker(new MarkerOptions()
                                 .position(place)
                                 .title(String.valueOf(myPlace.getName()))
-                                .snippet(String.valueOf(myPlace.getRating())));
+                                .snippet(
+                                        "Endereço: " + address + "\n" +
+                                        "Telefone: " + phone + "\n" +
+                                        "Avaliação: " + rating
+                                ));
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(place)
                                 .zoom(12)
@@ -92,22 +161,87 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
                     }
                 }
             });
-        }*/
+        }
 
     }
 
-    /*public List<Ponto> filterByMaterial(List<Ponto> pontos, String material){
-        List<Ponto> filteredPoints = new ArrayList<>()
-        for(int = 0; i < pontos.length; i++){
-            Ponto currentPoint = pontos.get(i);
-            String[] materialsOfThisLocal = currentPoint.getMaterial().split(",");
+    public List<Ponto> findPoints(){
+        List<Ponto> csvPoints = new ArrayList<>();
+        try {
+            csvPoints = readCSV(csvFile);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        List<Ponto> filteredByMaterial = filterByMaterial(csvPoints);
+        Log.e(TAG, "gpsLatitude no MapsActivity: " + gpsLatitude);
+        Log.e(TAG, "maxDistance no MapsActivity: " + maxDistance);
+        List<Ponto> filteredPoints = filterByDistance(filteredByMaterial);
+        return filteredPoints;
+    }
+
+    public List<Ponto> filterByMaterial(List<Ponto> pointList){
+        List<Ponto> filteredPoints = new ArrayList<>();
+        for(int i = 0; i < pointList.size(); i++){
+            Ponto currentPoint = pointList.get(i);
+            String[] materialsOfThisLocal = currentPoint.getMaterial().split(";");
+            Log.e(TAG, materialsOfThisLocal.toString());
             boolean placeHasMaterial = false;
             for(int j = 0; j < materialsOfThisLocal.length; j++){
                 if(materialsOfThisLocal[j].equals(material)) placeHasMaterial = true;
             }
             if(placeHasMaterial) filteredPoints.add(currentPoint);
         }
-    }*/
+        return filteredPoints;
+    }
+
+    public List<Ponto> filterByDistance(List<Ponto> pointList){
+        int i = 0;
+        while(i < pointList.size()){
+
+            double distance = distance(
+                    gpsLatitude, gpsLongitude,
+                    pointList.get(i).getLat(), pointList.get(i).getLongi(),
+                    "K");
+            Log.e(TAG, "distance: " + distance);
+            if(distance > maxDistance) {
+                Log.e(TAG, "ponto removido: " + pointList.get(i).getName());
+                pointList.remove(i);
+                continue;
+            }
+            i++;
+        }
+        return pointList;
+    }
+
+    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        if (unit == "K") {
+            dist = dist * 1.609344;
+        } else if (unit == "N") {
+            dist = dist * 0.8684;
+        }
+
+        return (dist);
+    }
+
+    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    /*::	This function converts decimal degrees to radians						 :*/
+    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    /*::	This function converts radians to decimal degrees						 :*/
+    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -122,5 +256,32 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public List<Ponto> readCSV(String arq) throws IOException {
+
+        List<Ponto> pontos = new ArrayList<>();
+        Context context = getContext();
+
+        Resources res = context.getResources();
+        InputStream is = getResources().openRawResource(res.getIdentifier(arq,"raw", context.getPackageName()));
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+
+        String line = "";
+
+        reader.readLine();  // pula o header
+
+        while((line = reader.readLine()) != null){
+
+            String[] splittedLine = line.split(",");
+
+
+            Ponto novoPonto = new Ponto(Double.parseDouble(splittedLine[0]),Double.parseDouble(splittedLine[1]), splittedLine[2], splittedLine[3], splittedLine[4]);
+
+            pontos.add(novoPonto);
+        }
+
+        return pontos;
     }
 }
