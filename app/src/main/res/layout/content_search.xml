@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity"
+    tools:context=".Activitiy.SearchActivity"
     tools:showIn="@layout/activity_search">
 
 
@@ -85,7 +85,8 @@
         android:layout_alignStart="@+id/radioGroupDescDoacao"
         android:layout_below="@id/textViewLocalização"
         android:layout_marginTop="12dp"
-        android:text="Usar minha localização atual" />
+        android:text="Usar minha localização atual"
+        android:onClick="onClickUseMyGPS"/>
 
 
     <TextView

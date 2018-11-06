@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MapsBaseActivity"
+    tools:context=".Activitiy.MapsBaseActivity"
     tools:showIn="@layout/activity_maps_base">
 
     <FrameLayout
