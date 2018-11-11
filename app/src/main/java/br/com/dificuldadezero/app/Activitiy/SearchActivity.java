@@ -19,9 +19,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -36,6 +39,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private String[] donationMaterials;
     private String[] thrashMaterials;
     private SeekBar seekBar;
+    private CheckBox useGPS;
+    private EditText address;
 
     LocationManager locationManager;
     String provider;
@@ -54,6 +59,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         radioButtonDescarte = findViewById(R.id.radioButtonDescarte);
         radioButtonDoacao = findViewById(R.id.radioButtonDoacao);
         seekBar = findViewById(R.id.seekBarRaioDistancia);
+        useGPS = findViewById(R.id.checkBoxLocalizaçãoAtual);
+        address = findViewById(R.id.editTextEndereco);
 
         String[] donationMaterials = {
                 "Roupas",
@@ -88,30 +95,68 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         this.thrashMaterials = thrashMaterials;
     }
 
+    public boolean errorHandler(){
+        String message = "";
+        boolean error = false;
+        if(!radioButtonDescarte.isChecked() && !radioButtonDoacao.isChecked()){
+            message = "Selecione se quer doar ou descartar o material";
+            error = true;
+        } else if(!useGPS.isChecked() | address.getText().toString().equals("")){
+            message = "Informe um endereço ou utilize a localização atual";
+            error = true;
+        }
+        if(error){
+            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+            toast.show();
+        }
+        return error;
+    }
+
     @SuppressLint("MissingPermission")
+    public Location findCurrentLocation(){
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        provider = locationManager.getBestProvider(new Criteria(), false);
+        Location location = locationManager.getLastKnownLocation(provider);
+        return location;
+    }
+
+    public Location findLocationByAddress(){
+        Location location = null;
+        return location;
+    }
+
     public void openMapActivity(View view) {
+        //check input erros
+        boolean error = errorHandler();
+        if(error) return;
+        //create intent to go to new activity
         Intent intent = new Intent(this, MapsBaseActivity.class);
+        //pass basic discard info
         intent.putExtra("donation", radioButtonDoacao.isChecked());
         intent.putExtra("material", spinner.getSelectedItem().toString());
-
+        //pass location info
         Location location;
-
+        if(useGPS.isChecked()) {
+            location = findCurrentLocation();
+            if (location == null) return; //user not accepted location access or other problem
+        } else {
+           location = findLocationByAddress();
+        }
         /**
          * Set GPS Location fetched address
          */
         double latitude;
         double longitude;
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        provider = locationManager.getBestProvider(new Criteria(), false);
-        location = locationManager.getLastKnownLocation(provider);
+
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         Log.i(TAG, String.format("latitude: %s", latitude));
         Log.i(TAG, String.format("longitude: %s", longitude));
         intent.putExtra("gpsLatitude", latitude);
         intent.putExtra("gpsLongitude", longitude);
-
+        //pass max distance info
         intent.putExtra("maxDistance", seekBar.getProgress());
+        //start activity
         startActivity(intent);
     }
 
