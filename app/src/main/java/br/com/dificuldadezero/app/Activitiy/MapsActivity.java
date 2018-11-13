@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,6 +56,7 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
     private double gpsLongitude;
     private int maxDistance;
     GeoDataClient myGeo;
+    private boolean placeForCurrentParametersFound = false;
 
 
     @Override
@@ -126,43 +128,58 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
                 return info;
             }
         });
-        List<Ponto> pontos = findPoints();
-        for(int i = 0; i < pontos.size(); i++) {
-            myGeo.getPlaceById(pontos.get(i).getId()).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-                @Override
-                public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-                    if (task.isSuccessful()) {
-                        PlaceBufferResponse places = task.getResult();
-                        Place myPlace = places.get(0);
-                        Log.i(TAG, "Place found: " + myPlace.getName());
-                        LatLng place = myPlace.getLatLng();
-                        String address = String.valueOf(myPlace.getAddress());
-                        String phone = String.valueOf(myPlace.getPhoneNumber());
-                        String rating = String.valueOf(myPlace.getRating());
-                        if(rating.equals("-1.0")) rating = "indisponível";
-                        mMap.addMarker(new MarkerOptions()
-                                .position(place)
-                                .title(String.valueOf(myPlace.getName()))
-                                .snippet(
-                                        "Endereço: " + address + "\n" +
-                                        "Telefone: " + phone + "\n" +
-                                        "Avaliação: " + rating
-                                ));
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(place)
-                                .zoom(12)
-                                .bearing(0)
-                                .tilt(0)
-                                .build();
-                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                        places.release();
-                    } else {
-                        Log.e(TAG, "Place not found.");
+        final List<Ponto> pontos = findPoints();
+        if(pontos.size() == 0){
+            Toast toast = Toast.makeText(getActivity(), "Não foi encontrado nenhum ponto que atenda aos parâmetros passados", Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            for(int i = 0; i < pontos.size(); i++) {
+                final int index = i;
+                myGeo.getPlaceById(pontos.get(i).getId()).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+                    @Override
+                    public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                        if (task.isSuccessful()) {
+                            PlaceBufferResponse places = task.getResult();
+                            Place myPlace = places.get(0);
+                            Log.i(TAG, "Place found: " + myPlace.getName());
+                            LatLng place = myPlace.getLatLng();
+                            String address = String.valueOf(myPlace.getAddress());
+                            String phone = String.valueOf(myPlace.getPhoneNumber());
+                            String rating = String.valueOf(myPlace.getRating());
+                            if (rating.equals("-1.0")) rating = "indisponível";
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(place)
+                                    .title(String.valueOf(pontos.get(index).getName()))
+                                    .snippet(
+                                            "Endereço: " + address + "\n" +
+                                                    "Telefone: " + phone + "\n" +
+                                                    "Avaliação: " + rating
+                                    ));
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(place)
+                                    .zoom(12)
+                                    .bearing(0)
+                                    .tilt(0)
+                                    .build();
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            setPlaceForCurrentParametersFound(true);
+                            places.release();
+                        } else {
+                            Log.e(TAG, "Place not found.");
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
+    }
+
+    public void setPlaceForCurrentParametersFound(boolean found){
+        this.placeForCurrentParametersFound = found;
+    }
+
+    public boolean isPlaceForCurrentParametersFound() {
+        return placeForCurrentParametersFound;
     }
 
     public List<Ponto> findPoints(){
