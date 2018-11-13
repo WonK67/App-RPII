@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity"
+    tools:context=".Activitiy.SearchActivity"
     tools:showIn="@layout/activity_search">
 
 
@@ -25,7 +25,8 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/textViewFinalidade"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <RadioButton
             android:id="@+id/radioButtonDescarte"
@@ -33,14 +34,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
 
-            android:text="Descarte" />
+            android:text="Descarte"
+            android:onClick="selectDonationOrThrash"/>
 
         <RadioButton
             android:id="@+id/radioButtonDoacao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Doação" />
+            android:text="Doação"
+            android:onClick="selectDonationOrThrash"/>
 
 
     </RadioGroup>
@@ -82,7 +85,8 @@
         android:layout_alignStart="@+id/radioGroupDescDoacao"
         android:layout_below="@id/textViewLocalização"
         android:layout_marginTop="12dp"
-        android:text="Usar minha localização atual" />
+        android:text="Usar minha localização atual"
+        android:onClick="onClickUseMyGPS"/>
 
 
     <TextView
@@ -132,8 +136,8 @@
         android:layout_alignStart="@id/textViewRaioDistancia"
         android:layout_below="@id/textViewRaioDistancia"
         android:layout_marginBottom="107dp"
-        android:max="10"
-        android:progress="5" />
+        android:max="15"
+        android:progress="10" />
 
     <Button
         android:id="@+id/button3"
