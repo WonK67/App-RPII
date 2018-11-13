@@ -27,14 +27,14 @@
         app:srcCompat="@drawable/logo_app" />
 
 
-    <Button
+    <ImageView
         android:id="@+id/button2"
-        android:layout_width="108dp"
+        android:layout_width="120dp"
         android:layout_height="57dp"
         android:layout_below="@id/imageLogo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:text="Entrar"
+        android:background="@drawable/botao_entrar2"
         android:onClick="openMainMenu"/>
 
 </RelativeLayout>

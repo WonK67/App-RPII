@@ -2,8 +2,10 @@ package br.com.dificuldadezero.app.Activitiy;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -40,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.dificuldadezero.app.DTO.Ponto;
+import br.com.dificuldadezero.app.R;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -129,6 +133,12 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
             }
         });
         final List<Ponto> pontos = findPoints();
+        int height = 150;
+        int width = 130;
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.place);
+        Bitmap b=bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        mMap.addMarker(new MarkerOptions().position(new LatLng(gpsLatitude, gpsLongitude)).title("Origem").icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
         if(pontos.size() == 0){
             Toast toast = Toast.makeText(getActivity(), "Não foi encontrado nenhum ponto que atenda aos parâmetros passados", Toast.LENGTH_LONG);
             toast.show();

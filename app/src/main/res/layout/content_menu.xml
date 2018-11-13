@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activitiy.MenuActivity"
-    tools:showIn="@layout/activity_menu">
+    tools:showIn="@layout/activity_menu"
+    android:background="#FFFFFF">
 
     <ImageView
         android:id="@+id/imageViewLabelInfografico"
@@ -13,28 +14,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/infograph_icon"
         android:layout_alignStart="@+id/infograph_icon"
-        android:layout_alignTop="@+id/infograph_icon"
         android:layout_marginStart="-6dp"
-        android:layout_marginTop="107dp"
+        android:layout_marginTop="10dp"
         app:srcCompat="@drawable/texto_infografico" />
 
     <ImageView
         android:id="@+id/imageViewLabelIndicacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/logo_app"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="49dp"
+        android:layout_alignEnd="@+id/indicacao_icon"
+        android:layout_below="@id/indicacao_icon"
+        android:layout_marginTop="10dp"
         app:srcCompat="@drawable/texto_indicacao" />
 
     <ImageView
         android:id="@+id/imageViewLabelBusca"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="145dp"
-        android:layout_marginBottom="200dp"
+        android:layout_below="@id/search_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         app:srcCompat="@drawable/texto_busca" />
 
     <ImageView
@@ -58,8 +57,8 @@
         android:id="@+id/infograph_icon"
         android:layout_width="98dp"
         android:layout_height="98dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="96dp"
+        android:layout_below="@id/search_icon"
+        android:layout_marginTop="50dp"
         android:layout_toStartOf="@+id/search_icon"
         android:onClick="openInfographActivity"
         app:srcCompat="@drawable/smartphone" />
@@ -70,7 +69,7 @@
         android:layout_alignTop="@+id/infograph_icon"
         android:layout_toEndOf="@+id/search_icon"
         app:srcCompat="@drawable/checked"
-        android:id="@+id/logo_app"
+        android:id="@+id/indicacao_icon"
         android:onClick="openIndicateActivity"/>
 
     <ImageView

@@ -132,7 +132,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textSize="15sp"
-        android:text="Raio de Distância"
+        android:text="Raio de Distância (1-15 km)"
         android:textColor="#000000"
         android:layout_alignStart="@id/place_autocomplete_fragment"
         android:layout_below="@id/place_autocomplete_fragment"
@@ -144,22 +144,21 @@
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="346dp"
         android:layout_height="39dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignStart="@id/textViewRaioDistancia"
         android:layout_below="@id/textViewRaioDistancia"
-        android:layout_marginBottom="107dp"
-        android:max="15"
+        android:max="14"
         android:progress="10" />
 
-    <Button
+    <ImageView
         android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="120dp"
+        android:layout_height="57dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
+        android:layout_below="@id/seekBarRaioDistancia"
+        android:layout_marginTop="15dp"
         android:text="Buscar!"
         android:onClick="openMapActivity"
+        android:background="@drawable/botao_buscar"
         />
 
 

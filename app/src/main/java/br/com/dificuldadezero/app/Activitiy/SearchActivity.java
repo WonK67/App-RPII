@@ -207,7 +207,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         intent.putExtra("gpsLatitude", latitude);
         intent.putExtra("gpsLongitude", longitude);
         //pass max distance info
-        intent.putExtra("maxDistance", seekBar.getProgress());
+        intent.putExtra("maxDistance", seekBar.getProgress() + 1); //1 a 15
         //close connection to api
         mClient.disconnect();
         //start activity
