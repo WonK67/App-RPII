@@ -8,6 +8,36 @@
     tools:showIn="@layout/activity_menu">
 
     <ImageView
+        android:id="@+id/imageViewLabelInfografico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/infograph_icon"
+        android:layout_alignStart="@+id/infograph_icon"
+        android:layout_alignTop="@+id/infograph_icon"
+        android:layout_marginStart="-6dp"
+        android:layout_marginTop="107dp"
+        app:srcCompat="@drawable/texto_infografico" />
+
+    <ImageView
+        android:id="@+id/imageViewLabelIndicacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/logo_app"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="49dp"
+        app:srcCompat="@drawable/texto_indicacao" />
+
+    <ImageView
+        android:id="@+id/imageViewLabelBusca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="145dp"
+        android:layout_marginBottom="200dp"
+        app:srcCompat="@drawable/texto_busca" />
+
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="174dp"
         android:layout_alignParentTop="true"
