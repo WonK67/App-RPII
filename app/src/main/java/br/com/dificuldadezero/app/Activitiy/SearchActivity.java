@@ -12,6 +12,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,14 +26,25 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
 
 import static android.support.constraint.Constraints.TAG;
 
 import br.com.dificuldadezero.app.R;
 
 
-public class SearchActivity extends AppCompatActivity implements LocationListener {
+public class SearchActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private Spinner spinner;
     private RadioButton radioButtonDoacao;
@@ -41,6 +54,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private SeekBar seekBar;
     private CheckBox useGPS;
     private EditText address;
+    private LatLng noGpsLatLong;
+    private GoogleApiClient mClient;
+    private PlaceAutocompleteFragment autocompleteFragment;
+    private TextView textViewOu;
 
     LocationManager locationManager;
     String provider;
@@ -60,7 +77,44 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         radioButtonDoacao = findViewById(R.id.radioButtonDoacao);
         seekBar = findViewById(R.id.seekBarRaioDistancia);
         useGPS = findViewById(R.id.checkBoxLocalizaçãoAtual);
-        address = findViewById(R.id.editTextEndereco);
+        //address = findViewById(R.id.editTextEndereco);
+        textViewOu = findViewById(R.id.textViewOu);
+
+        mClient = new GoogleApiClient
+                .Builder(getApplicationContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(SearchActivity.this, this)
+                .build();
+
+        autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                noGpsLatLong = place.getLatLng();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+        autocompleteFragment.getView().findViewById(R.id.place_autocomplete_clear_button).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        noGpsLatLong = null;
+                        autocompleteFragment.setText("");
+                    }
+                }
+        );
+
+
+        autocompleteFragment.setHint("Insira um endereço");
 
         String[] donationMaterials = {
                 "Roupas",
@@ -101,9 +155,12 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         if(!radioButtonDescarte.isChecked() && !radioButtonDoacao.isChecked()){
             message = "Selecione se quer doar ou descartar o material";
             error = true;
-        } else if(!useGPS.isChecked() | address.getText().toString().equals("")){
+        } else if(!useGPS.isChecked() && noGpsLatLong == null){
             message = "Informe um endereço ou utilize a localização atual";
             error = true;
+        } else if(useGPS.isChecked() && noGpsLatLong != null){
+            message = "Escolha entre usar digitar um endereço e usar sua localização atual";
+            error=true;
         }
         if(error){
             Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
@@ -120,11 +177,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         return location;
     }
 
-    public Location findLocationByAddress(){
-        Location location = null;
-        return location;
-    }
-
     public void openMapActivity(View view) {
         //check input erros
         boolean error = errorHandler();
@@ -135,27 +187,29 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         intent.putExtra("donation", radioButtonDoacao.isChecked());
         intent.putExtra("material", spinner.getSelectedItem().toString());
         //pass location info
-        Location location;
+        double latitude;
+        double longitude;
         if(useGPS.isChecked()) {
+            Location location;
             location = findCurrentLocation();
             if (location == null) return; //user not accepted location access or other problem
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
         } else {
-           location = findLocationByAddress();
+           latitude = noGpsLatLong.latitude;
+           longitude = noGpsLatLong.longitude;
         }
         /**
          * Set GPS Location fetched address
          */
-        double latitude;
-        double longitude;
-
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
         Log.i(TAG, String.format("latitude: %s", latitude));
         Log.i(TAG, String.format("longitude: %s", longitude));
         intent.putExtra("gpsLatitude", latitude);
         intent.putExtra("gpsLongitude", longitude);
         //pass max distance info
         intent.putExtra("maxDistance", seekBar.getProgress());
+        //close connection to api
+        mClient.disconnect();
         //start activity
         startActivity(intent);
     }
@@ -277,7 +331,31 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     public void onClickUseMyGPS(View view) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission();
-            return;
+            //return;
         }
+        if(useGPS.isChecked()){
+            autocompleteFragment.getView().findViewById(R.id.place_autocomplete_fragment).setVisibility(View.INVISIBLE);
+            textViewOu.setVisibility(View.INVISIBLE);
+            autocompleteFragment.getView().findViewById(R.id.place_autocomplete_clear_button).performClick();
+
+        } else {
+            autocompleteFragment.getView().findViewById(R.id.place_autocomplete_fragment).setVisibility(View.VISIBLE);
+            textViewOu.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
