@@ -209,7 +209,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         //pass max distance info
         intent.putExtra("maxDistance", seekBar.getProgress() + 1); //1 a 15
         //close connection to api
-        mClient.disconnect();
+        //mClient.disconnect();
         //start activity
         startActivity(intent);
     }

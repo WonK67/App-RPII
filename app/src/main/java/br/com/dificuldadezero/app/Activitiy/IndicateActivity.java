@@ -24,6 +24,7 @@ public class IndicateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_indicate);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         nome = findViewById(R.id.editTextName);
         local = findViewById(R.id.editTextPlaceName);
         message = findViewById(R.id.editTextMessage);

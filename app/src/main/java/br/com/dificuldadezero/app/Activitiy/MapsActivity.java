@@ -81,12 +81,12 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
         Log.e(TAG, "Material: " + material);
         Log.i(TAG, "gpsLatitude: " + gpsLatitude);
         Log.i(TAG, "gpsLongitude: " + gpsLongitude);
-        mClient = new GoogleApiClient
+        /*mClient = new GoogleApiClient
                 .Builder(getContext())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
-                .build();
+                .build();*/
         myGeo = Places.getGeoDataClient(getContext());
     }
 
@@ -133,6 +133,10 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
             }
         });
         final List<Ponto> pontos = findPoints();
+        final List<String> pointsIds = new ArrayList<>();
+        for(Ponto ponto: pontos){
+            pointsIds.add(ponto.getId());
+        }
         int height = 150;
         int width = 130;
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.place);
@@ -143,36 +147,30 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
             Toast toast = Toast.makeText(getActivity(), "Não foi encontrado nenhum ponto que atenda aos parâmetros passados", Toast.LENGTH_LONG);
             toast.show();
         } else {
-            for(int i = 0; i < pontos.size(); i++) {
+            for(int i = 0; i < pointsIds.size(); i=i+20) {
                 final int index = i;
-                myGeo.getPlaceById(pontos.get(i).getId()).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+                myGeo.getPlaceById(pointsIds.subList(i,pointsIds.size()).toArray(new String[0])).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
                     @Override
                     public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
                         if (task.isSuccessful()) {
                             PlaceBufferResponse places = task.getResult();
-                            Place myPlace = places.get(0);
-                            Log.i(TAG, "Place found: " + myPlace.getName());
-                            LatLng place = myPlace.getLatLng();
-                            String address = String.valueOf(myPlace.getAddress());
-                            String phone = String.valueOf(myPlace.getPhoneNumber());
-                            String rating = String.valueOf(myPlace.getRating());
-                            if (rating.equals("-1.0")) rating = "indisponível";
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(place)
-                                    .title(String.valueOf(pontos.get(index).getName()))
-                                    .snippet(
-                                            "Endereço: " + address + "\n" +
-                                                    "Telefone: " + phone + "\n" +
-                                                    "Avaliação: " + rating
-                                    ));
-                            CameraPosition cameraPosition = new CameraPosition.Builder()
-                                    .target(place)
-                                    .zoom(12)
-                                    .bearing(0)
-                                    .tilt(0)
-                                    .build();
-                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                            setPlaceForCurrentParametersFound(true);
+                            for(int j = 0; j < 20 && j < (pointsIds.size() - index); j++){
+                                Place myPlace = places.get(j);
+                                Log.i(TAG, "Place found: " + myPlace.getName());
+                                LatLng place = myPlace.getLatLng();
+                                String address = String.valueOf(myPlace.getAddress());
+                                String phone = String.valueOf(myPlace.getPhoneNumber());
+                                String rating = String.valueOf(myPlace.getRating());
+                                if (rating.equals("-1.0")) rating = "indisponível";
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(place)
+                                        .title(String.valueOf(pontos.get(index).getName()))
+                                        .snippet(
+                                                "Endereço: " + address + "\n" +
+                                                        "Telefone: " + phone + "\n" +
+                                                        "Avaliação: " + rating
+                                        ));
+                            }
                             places.release();
                         } else {
                             Log.e(TAG, "Place not found.");
@@ -181,6 +179,14 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
                 });
             }
         }
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(gpsLatitude, gpsLongitude))
+                .zoom(12)
+                .bearing(0)
+                .tilt(0)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        setPlaceForCurrentParametersFound(true);
 
     }
 
