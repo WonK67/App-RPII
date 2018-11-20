@@ -62,6 +62,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
     LocationManager locationManager;
     String provider;
+    Location location;
 
 
 
@@ -178,9 +179,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
     @SuppressLint("MissingPermission")
     public Location findCurrentLocation(){
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        provider = locationManager.getBestProvider(new Criteria(), false);
-        Location location = locationManager.getLastKnownLocation(provider);
+        if(location==null) location = locationManager.getLastKnownLocation(provider);
         return location;
     }
 
@@ -197,7 +196,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         double latitude;
         double longitude;
         if(useGPS.isChecked()) {
-            Location location;
             location = findCurrentLocation();
             if (location == null) return; //user not accepted location access or other problem
             latitude = location.getLatitude();
@@ -298,9 +296,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                             == PackageManager.PERMISSION_GRANTED) {
 
                         //Request location updates:
+                        Log.i("OI", "EStou aqui!!");
                         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                         provider = locationManager.getBestProvider(new Criteria(), false);
-                        locationManager.requestLocationUpdates(provider, 400, 1, this);
+                        locationManager.requestSingleUpdate(provider, this, null);
                     }
 
                 } else {
@@ -317,7 +316,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
     @Override
     public void onLocationChanged(Location location) {
-
+        this.location = location;
     }
 
     @Override
@@ -339,6 +338,16 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission();
             //return;
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            //Request location updates:
+            Log.i("OI", "EStou aqui!!");
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            provider = locationManager.getBestProvider(new Criteria(), false);
+            locationManager.requestSingleUpdate(provider, this, null);
         }
         if(useGPS.isChecked()){
             autocompleteFragment.getView().findViewById(R.id.place_autocomplete_fragment).setVisibility(View.INVISIBLE);
