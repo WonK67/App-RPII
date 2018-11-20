@@ -162,9 +162,10 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
                                 String phone = String.valueOf(myPlace.getPhoneNumber());
                                 String rating = String.valueOf(myPlace.getRating());
                                 if (rating.equals("-1.0")) rating = "indisponível";
+                                String nameCSV = findNameInCsv(myPlace.getId(), pontos);
                                 mMap.addMarker(new MarkerOptions()
                                         .position(place)
-                                        .title(String.valueOf(pontos.get(index).getName()))
+                                        .title(nameCSV)
                                         .snippet(
                                                 "Endereço: " + address + "\n" +
                                                         "Telefone: " + phone + "\n" +
@@ -196,6 +197,14 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
 
     public boolean isPlaceForCurrentParametersFound() {
         return placeForCurrentParametersFound;
+    }
+
+    public String findNameInCsv(String id, List<Ponto> csvPoints){
+        String nome = "Nome do local indisponível";
+        for(Ponto ponto: csvPoints){
+            if(ponto.getId().equals(id)) nome = ponto.getName();
+        }
+        return nome;
     }
 
     public List<Ponto> findPoints(){
