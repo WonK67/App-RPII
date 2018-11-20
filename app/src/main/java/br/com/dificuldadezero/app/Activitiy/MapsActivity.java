@@ -154,7 +154,7 @@ public class MapsActivity extends SupportMapFragment implements OnMapReadyCallba
                     public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
                         if (task.isSuccessful()) {
                             PlaceBufferResponse places = task.getResult();
-                            for(int j = 0; j < 20 && j < (pointsIds.size() - index); j++){
+                            for(int j = 0; j < places.getCount(); j++){
                                 Place myPlace = places.get(j);
                                 Log.i(TAG, "Place found: " + myPlace.getName());
                                 LatLng place = myPlace.getLatLng();
